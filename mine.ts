@@ -43,11 +43,6 @@ class CellEl {
             if (game!=null) game.appendChild(gameCont);
 		
 
-	/*	if (this.board) {
-			this.board.parentNode.removeChild(this.board);
-			this.board = null;
-		}*/
-
 		let board = this.generateField(H, placedBombs);
 		board.cellSpacing = '0';
 		board.className = 'game-board';
@@ -72,8 +67,6 @@ class CellEl {
 				t[x].cell.onclick= function() {
 				if(t[x].active==true)
 				self.showInfo(t[x],x,t,H);
-				/*console.log("yeah"+x);
-				console.log()*/
 				};
 			}
 		}
@@ -141,7 +134,6 @@ class CellEl {
 			this.openCell(elem);
 		} else { 
 			this.roll(elem,t,H);
-			//this.openCell(elem);
 		}
 	} else { 
 		this.openCell(elem);
@@ -221,8 +213,6 @@ class CellEl {
 	roll: function(elem: CellEl, t: CellEl[], H:number) {	
 		console.log("rolling");
 	if (elem==undefined || elem.x < 0 || elem.y < 0 || elem.x >= 16 || elem.y >= 16) {
-		//console.log("pizda");
-		//console.log("fuck x "+elem.x+"y "+elem.y);
 			return;
 		}
 

@@ -27,10 +27,6 @@ var MyMineSweeper = {
         gameField.className = 'game-field';
         if (game != null)
             game.appendChild(gameCont);
-        /*	if (this.board) {
-                this.board.parentNode.removeChild(this.board);
-                this.board = null;
-            }*/
         var board = this.generateField(H, placedBombs);
         board.cellSpacing = '0';
         board.className = 'game-board';
@@ -49,8 +45,6 @@ var MyMineSweeper = {
                 t[x].cell.onclick = function () {
                     if (t[x].active == true)
                         self.showInfo(t[x], x, t, H);
-                    /*console.log("yeah"+x);
-                    console.log()*/
                 };
             };
             for (var x = y * H; x < (y + 1) * H; x++) {
@@ -109,7 +103,6 @@ var MyMineSweeper = {
             }
             else {
                 this.roll(elem, t, H);
-                //this.openCell(elem);
             }
         }
         else {
@@ -184,8 +177,6 @@ var MyMineSweeper = {
     roll: function (elem, t, H) {
         console.log("rolling");
         if (elem == undefined || elem.x < 0 || elem.y < 0 || elem.x >= 16 || elem.y >= 16) {
-            //console.log("pizda");
-            //console.log("fuck x "+elem.x+"y "+elem.y);
             return;
         }
         this.openCell(elem);
