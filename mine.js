@@ -8,9 +8,6 @@ var CellEl = (function () {
         this.bomb = false;
         this.check = false;
     }
-    CellEl.prototype.handleClick = function () {
-        return 0;
-    };
     return CellEl;
 }());
 var MyMineSweeper = {
@@ -51,7 +48,7 @@ var MyMineSweeper = {
                 t.push(new CellEl(0, x % H, y, r.insertCell(x % H)));
                 t[x].cell.onclick = function () {
                     if (t[x].active == true)
-                        self.showInfo(t[x], x, t);
+                        self.showInfo(t[x], x, t, H);
                     /*console.log("yeah"+x);
                     console.log()*/
                 };
@@ -103,14 +100,15 @@ var MyMineSweeper = {
             this.getElem(t, x + 1, y + 1, 16).num++;
         }
     },
-    showInfo: function (elem, x, t) {
+    showInfo: function (elem, x, t, H) {
         console.log("showInfo " + x);
+        console.log("give x " + elem.x + "y " + elem.y + "n- " + (elem.y * H + elem.x));
         if (!elem.bomb) {
             if (elem.num > 0) {
                 this.openCell(elem);
             }
             else {
-                this.roll(elem, t);
+                this.roll(elem, t, H);
                 //this.openCell(elem);
             }
         }
@@ -183,15 +181,15 @@ var MyMineSweeper = {
         console.log("give x " + x + "y " + y + "n-" + (y * H + x));
         return t[y * H + x];
     },
-    roll: function (elem, t) {
+    roll: function (elem, t, H) {
         console.log("rolling");
-        if (elem.x == undefined || elem.y == undefined || elem.x < 0 || elem.y < 0 || elem.x >= 16 || elem.y >= 16) {
-            console.log("pizda");
-            console.log("fuck x " + elem.x + "y " + elem.y);
+        if (elem == undefined || elem.x < 0 || elem.y < 0 || elem.x >= 16 || elem.y >= 16) {
+            //console.log("pizda");
+            //console.log("fuck x "+elem.x+"y "+elem.y);
             return;
         }
         this.openCell(elem);
-        if (elem.num > 0) {
+        if (elem.num > 0 && elem.bomb == false) {
             elem.cell.innerHTML = '<b>' + elem.num + '</b>';
             return;
         }
@@ -199,12 +197,21 @@ var MyMineSweeper = {
             return;
         }
         elem.check = true;
-        this.roll(this.getElem(t, elem.x - 1, elem.y, 16), t);
-        this.roll(this.getElem(t, elem.x, elem.y + 1, 16), t);
-        this.roll(this.getElem(t, elem.x, elem.y - 1, 16), t);
-        this.roll(this.getElem(t, elem.x - 1, elem.y - 1, 16), t);
-        this.roll(this.getElem(t, elem.x + 1, elem.y - 1, 16), t);
-        this.roll(this.getElem(t, elem.x - 1, elem.y + 1, 16), t);
-        this.roll(this.getElem(t, elem.x + 1, elem.y + 1, 16), t);
+        if (elem.x - 1 >= 0)
+            this.roll(this.getElem(t, elem.x - 1, elem.y, 16), t, H);
+        if (elem.y + 1 < H)
+            this.roll(this.getElem(t, elem.x, elem.y + 1, 16), t, H);
+        if (elem.y - 1 >= 0)
+            this.roll(this.getElem(t, elem.x, elem.y - 1, 16), t, H);
+        if (elem.x + 1 < H)
+            this.roll(this.getElem(t, elem.x + 1, elem.y, 16), t, H);
+        if (elem.y - 1 >= 0 && elem.x - 1 >= 0)
+            this.roll(this.getElem(t, elem.x - 1, elem.y - 1, 16), t, H);
+        if (elem.y - 1 >= 0 && elem.x + 1 < H)
+            this.roll(this.getElem(t, elem.x + 1, elem.y - 1, 16), t, H);
+        if (elem.y + 1 < H && elem.x - 1 >= 0)
+            this.roll(this.getElem(t, elem.x - 1, elem.y + 1, 16), t, H);
+        if (elem.y + 1 < H && elem.x + 1 < H)
+            this.roll(this.getElem(t, elem.x + 1, elem.y + 1, 16), t, H);
     }
 };

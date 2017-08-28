@@ -17,11 +17,9 @@ class CellEl {
         this.bomb=false;
 		this.check=false;
     }
-	handleClick(){
-		return 0;
-	}
+	
 }
-var MyMineSweeper = {
+ var MyMineSweeper = {
 	init: function() {
         
 		let H= 16;
@@ -73,7 +71,7 @@ var MyMineSweeper = {
                 t.push(new CellEl(0,x%H,y,r.insertCell(x%H)));
 				t[x].cell.onclick= function() {
 				if(t[x].active==true)
-				self.showInfo(t[x],x,t);
+				self.showInfo(t[x],x,t,H);
 				/*console.log("yeah"+x);
 				console.log()*/
 				};
@@ -134,14 +132,15 @@ var MyMineSweeper = {
 		}
 	},
 
-	showInfo: function(elem: CellEl,x:number,t:CellEl[]) {
+	showInfo: function(elem: CellEl,x:number,t:CellEl[],H:number) {
 		console.log("showInfo "+x);
+		console.log("give x "+elem.x+"y "+elem.y+"n- "+(elem.y*H+elem.x));
 	if (!elem.bomb) { 
 		if (elem.num > 0) { 
 		
 			this.openCell(elem);
 		} else { 
-			this.roll(elem,t);
+			this.roll(elem,t,H);
 			//this.openCell(elem);
 		}
 	} else { 
@@ -209,6 +208,7 @@ var MyMineSweeper = {
 					this.openCell(t[i]);
 					t[i].cell.style.background='red';
 				}
+				
 				t[i].active=false;
 		}
 	},
@@ -218,16 +218,16 @@ var MyMineSweeper = {
 		return t[y*H+x];
 	},
 
-	roll: function(elem: CellEl, t: CellEl[]) {	
+	roll: function(elem: CellEl, t: CellEl[], H:number) {	
 		console.log("rolling");
-	if (elem.x==undefined || elem.y==undefined || elem.x < 0 || elem.y < 0 || elem.x >= 16 || elem.y >= 16) {
-		console.log("pizda");
-		console.log("fuck x "+elem.x+"y "+elem.y);
+	if (elem==undefined || elem.x < 0 || elem.y < 0 || elem.x >= 16 || elem.y >= 16) {
+		//console.log("pizda");
+		//console.log("fuck x "+elem.x+"y "+elem.y);
 			return;
 		}
 
 		this.openCell(elem);
-		if (elem.num > 0) {
+		if (elem.num > 0 && elem.bomb==false) {
 			elem.cell.innerHTML = '<b>' + elem.num + '</b>';
 			return;
 		}
@@ -238,12 +238,13 @@ var MyMineSweeper = {
 
 		elem.check = true;
 
-		this.roll(this.getElem(t,elem.x-1,elem.y,16),t); 
-		this.roll(this.getElem(t,elem.x,elem.y+1,16),t); 
-		this.roll(this.getElem(t,elem.x,elem.y-1,16),t); 
-		this.roll(this.getElem(t,elem.x-1,elem.y-1,16),t);  
-		this.roll(this.getElem(t,elem.x+1,elem.y-1,16),t); 
-		this.roll(this.getElem(t,elem.x-1,elem.y+1,16),t); 
-		this.roll(this.getElem(t,elem.x+1,elem.y+1,16),t); 
+		if(elem.x-1>=0)  this.roll(this.getElem(t,elem.x-1,elem.y,16),t,H); 
+		if(elem.y+1<H)  this.roll(this.getElem(t,elem.x,elem.y+1,16),t,H); 
+		if(elem.y-1>=0)  this.roll(this.getElem(t,elem.x,elem.y-1,16),t,H); 
+		if(elem.x+1<H)  this.roll(this.getElem(t,elem.x+1,elem.y,16),t,H); 
+		if(elem.y-1>=0 && elem.x-1>=0 )  this.roll(this.getElem(t,elem.x-1,elem.y-1,16),t,H);  
+		if(elem.y-1>=0 && elem.x+1<H )  this.roll(this.getElem(t,elem.x+1,elem.y-1,16),t,H); 
+		if(elem.y+1<H && elem.x-1>=0 )  this.roll(this.getElem(t,elem.x-1,elem.y+1,16),t,H); 
+		if(elem.y+1<H && elem.x+1<H )  this.roll(this.getElem(t,elem.x+1,elem.y+1,16),t,H); 
 	}
 }
